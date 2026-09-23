@@ -1,160 +1,544 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>PACT Hand</title>
-<style>
-  :root{
-    --ink:#1a1d23; --mut:#5a6270; --line:#e5e7ec; --bg:#ffffff; --soft:#f6f7f9;
-    --acc:#0072B2; --acc2:#D55E00;
-    color-scheme: light;
-  }
-  *{box-sizing:border-box}
-  body{margin:0;background:var(--bg);color:var(--ink);
-    font:16px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
-    padding-inline:16px}
-  .wrap{max-width:880px;margin:0 auto}
-  header{padding:56px 0 8px;text-align:center}
-  h1{font-size:clamp(24px,4.2vw,38px);line-height:1.25;margin:0 0 14px;font-weight:800;letter-spacing:-.01em}
-  .authors{color:var(--mut);font-size:17px;margin:0 0 6px}
-  .venue{color:var(--mut);font-size:15px;margin:0 0 22px}
-  .btns{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-bottom:28px}
-  .btn{display:inline-block;padding:9px 20px;border-radius:999px;background:var(--ink);color:#fff;
-    text-decoration:none;font-size:15px;font-weight:600}
-  .btn.ghost{background:var(--soft);color:var(--ink);border:1px solid var(--line)}
-  figure{margin:0 0 10px}
-  figure img{max-width:100%;display:block;margin:0 auto;border-radius:10px}
-  figcaption{color:var(--mut);font-size:14px;line-height:1.55;margin-top:10px;text-align:left}
-  section{padding:26px 0;border-top:1px solid var(--line)}
-  h2{font-size:22px;margin:0 0 14px;letter-spacing:-.01em}
-  p{margin:0 0 12px}
-  .lead{font-size:17px}
-  .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin:18px 0 6px}
-  .kpi{background:var(--soft);border:1px solid var(--line);border-radius:12px;padding:16px 14px;text-align:center}
-  .kpi b{display:block;font-size:26px;color:var(--acc);letter-spacing:-.01em}
-  .kpi span{color:var(--mut);font-size:13.5px;line-height:1.4;display:block;margin-top:4px}
-  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:18px;align-items:start}
-  @media (max-width:640px){.grid2{grid-template-columns:1fr}}
-  .videobox{background:var(--soft);border:1px dashed var(--line);border-radius:12px;
-    padding:44px 20px;text-align:center;color:var(--mut);font-size:15px}
-  pre{background:var(--soft);border:1px solid var(--line);border-radius:10px;padding:14px 16px;
-    overflow-x:auto;font-size:13px;line-height:1.5;color:var(--ink)}
-  footer{padding:28px 0 44px;color:var(--mut);font-size:13.5px;text-align:center}
-  .note{color:var(--mut);font-size:14px}
-</style>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PACT: Posture-Aligned Co-Design Technique for Hand Configuration and Retargeting in Multi-Finger Imitation Learning</title>
+<meta name="description" content="PACT Hand: a 17-servo anthropomorphic robot hand co-designed with the posture retargeter that drives it. 3.9 mm posture error, 2 kg payload under a matched torque cap, 86% grasp success on everyday objects.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="PACT: Posture-Aligned Co-Design Technique for Hand Configuration and Retargeting in Multi-Finger Imitation Learning">
+<meta property="og:description" content="A 17-servo anthropomorphic hand co-designed with its posture retargeter. One law serves as the design objective, the evaluation metric, and the runtime controller.">
+<meta property="og:image" content="https://pact-hand-2027.github.io/assets/img/og.jpg">
+<meta property="og:url" content="https://pact-hand-2027.github.io/">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%231f4e79'/%3E%3Crect x='8' y='7' width='3.6' height='13' rx='1.8' fill='%23fff'/%3E%3Crect x='13.2' y='5' width='3.6' height='15' rx='1.8' fill='%23fff'/%3E%3Crect x='18.4' y='7' width='3.6' height='13' rx='1.8' fill='%23fff'/%3E%3Crect x='20.5' y='16' width='3.6' height='10' rx='1.8' transform='rotate(-48 22.3 21)' fill='%23fff'/%3E%3Crect x='8' y='18' width='14' height='8' rx='2.5' fill='%23fff'/%3E%3C/svg%3E">
+<link rel="preload" href="assets/fonts/ibm-plex-sans-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="assets/css/site.css">
+<script type="module" src="assets/js/model-viewer.min.js"></script>
 </head>
 <body>
-<div class="wrap">
 
-<header>
-  <h1>PACT: Posture-Aligned Co-Design Technique for Hand Configuration and Retargeting in Multi-Finger Imitation&nbsp;Learning</h1>
-  <p class="authors">Anonymous Authors</p>
-  <p class="venue">Under double-anonymous review</p>
-  <div class="btns">
-    <!-- 論文PDFを公開してよい段階になったら assets/paper.pdf を置いて有効化
-    <a class="btn" href="assets/paper.pdf">Paper</a> -->
-    <a class="btn ghost" href="#video">Video</a>
-    <a class="btn ghost" href="#results">Results</a>
+<header class="nav">
+  <div class="wrap">
+    <a class="brand" href="#top" aria-label="PACT Hand, back to top">
+      <svg viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="7" fill="#1f4e79"/><rect x="8" y="7" width="3.6" height="13" rx="1.8" fill="#fff"/><rect x="13.2" y="5" width="3.6" height="15" rx="1.8" fill="#fff"/><rect x="18.4" y="7" width="3.6" height="13" rx="1.8" fill="#fff"/><rect x="20.5" y="16" width="3.6" height="10" rx="1.8" transform="rotate(-48 22.3 21)" fill="#fff"/><rect x="8" y="18" width="14" height="8" rx="2.5" fill="#fff"/></svg>
+      PACT Hand
+    </a>
+    <nav class="nav-links" id="navlinks" aria-label="Sections">
+      <a href="#design">Co-design</a>
+      <a href="#hardware">Hardware</a>
+      <a href="#retargeting">Retargeting</a>
+      <a href="#experiments">Experiments</a>
+      <a href="#demos">Demos</a>
+      <a href="#release">Release</a>
+      <a href="#citation">Citation</a>
+    </nav>
+    <button class="nav-toggle" id="navtoggle" aria-expanded="false" aria-controls="navlinks">Menu</button>
+    <a class="nav-cta" href="#video"><svg width="11" height="12" viewBox="0 0 11 12" aria-hidden="true"><path d="M0 0l11 6-11 6z" fill="#fff"/></svg>Video</a>
   </div>
-  <figure>
-    <img src="assets/teaser.jpg" alt="The PACT Hand and its co-designed posture-IK retargeter at runtime">
-    <figcaption>The PACT Hand (left), a 17-servo anthropomorphic hand co-designed with its driving
-    posture-IK retargeter. At runtime (right), a bare-hand posture captured from a single RGB camera is
-    mapped onto the hand using the exact same law that served as the design objective and evaluation
-    metric, deployed without modification.</figcaption>
-  </figure>
 </header>
 
-<section>
-  <h2>Abstract</h2>
-  <p class="lead">The fidelity of teleoperated demonstrations used for imitation learning is determined by how faithfully a robot hand can replicate the operator's posture. The posture retargeting law that the robot will ultimately execute is typically selected only once the hardware has been finalized. Conventional hand designs are derived from established mechanical principles, so they often neglect human-like grasping postures, which constrains the potential of learning-based dexterous manipulation. We introduce PACT, an optimization based on human grasping postures that jointly optimizes the mechanical parameters of a 17-servo robot hand (link lengths, joint offsets, mounting angles, and base placements) and its nonlinear posture retargeter (a linear human-to-robot joint map, per-joint posture-IK weights, and damping). The optimization enforces full-finger correspondence (MCP, PIP, DIP, and tip of each finger) to human poses from the DexYCB dataset, and is also constrained by physical requirements such as servo interference, assembly clearances, and flat-hand protrusion, so the resulting design can be physically assembled. We fabricate the PACT Hand and validate it through teleoperation experiments and an imitation-learning demonstration. The proposed hand reproduces all human hand keypoints with a kinematic root-mean-square error (RMSE) of 3.9&nbsp;mm, compared to 12.8&nbsp;mm for the LEAP Hand baseline, and keeps all fingertips within 10&nbsp;mm on every grasping posture, while the baseline achieves this for only 21.6% of the poses. Under matched per-joint torque limits, the proposed hand lifts twice the baseline payload, 2&nbsp;kg against 1&nbsp;kg, and deforms a held paper cup seven times less, reaching a deformation level comparable to a human hand. It also achieves an 86% grasping success rate on YCB daily objects, compared to 64% for the baseline. Finally, as a demonstration, an imitation-learning policy trained on demonstrations collected with the PACT Hand achieved a 75% success rate at held-out placements in a can pick-and-place task.</p>
-</section>
+<main id="top">
 
-<section id="video">
-  <h2>Supplementary Video</h2>
-  <!-- 動画を置く場合: assets/video.mp4 を追加し、下のプレースホルダを次に置き換える
-  <video controls preload="metadata" style="width:100%;border-radius:10px" src="assets/video.mp4"></video>
-  -->
-  <div class="videobox">Supplementary video — coming soon.</div>
-</section>
+<!-- ============ HERO ============ -->
+<section class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <div class="eyebrow"><i></i>Under double-anonymous review &middot; ICRA 2027</div>
+      <h1><em>PACT</em> Hand</h1>
+      <p class="title">Posture-Aligned Co-Design Technique for Hand Configuration and Retargeting in Multi-Finger Imitation Learning</p>
+      <p class="lead">A 17-servo anthropomorphic hand co-designed with the posture retargeter that drives it. One law serves as the design objective, the evaluation metric, and the runtime controller.</p>
+      <div class="hero-actions">
+        <a class="btn btn-primary" href="#video"><svg width="12" height="13" viewBox="0 0 11 12" aria-hidden="true"><path d="M0 0l11 6-11 6z" fill="#fff"/></svg>Watch the video</a>
+        <span class="btn btn-ghost" aria-disabled="true" title="The paper is under double-anonymous review">Paper <small>under review</small></span>
+        <a class="btn btn-ghost" href="#release">Code &amp; CAD <small>upon publication</small></a>
+      </div>
+      <div class="hero-meta"><b>Anonymous authors</b> &middot; project page for peer review</div>
+    </div>
 
-<section>
-  <h2>Method: One Law for Design, Evaluation, and Runtime</h2>
-  <p>PACT formulates hand design as <em>deployed-retargeter–mechanism co-design</em>: the design
-  objective is the residual of the very posture-IK law that later runs on the robot. Link lengths,
-  joint offsets, mounting angles, and finger-base placements are optimized jointly with the
-  retargeter's own parameters, and a staged optimization folds servo interference, assembly
-  clearance, and flat-hand protrusion into the same objective without compromising tracking
-  accuracy.</p>
-  <figure>
-    <img src="assets/pipeline.png" alt="The staged optimization reshaping the hand, ending at the fabricated PACT Hand">
-    <figcaption>Fabrication constraints introduced stage by stage. Each panel overlays the optimized
-    joint chains and as-built servo volumes on the human skeleton after successive stages; right, the
-    fabricated hand.</figcaption>
-  </figure>
-</section>
-
-<section id="results">
-  <h2>Results</h2>
-  <div class="kpis">
-    <div class="kpi"><b>3.9 mm</b><span>all-keypoint kinematic RMSE<br>(LEAP baseline: 12.8 mm)</span></div>
-    <div class="kpi"><b>2&times;</b><span>payload under matched torque caps<br>(2 kg vs. 1 kg)</span></div>
-    <div class="kpi"><b>7&times;</b><span>less paper-cup deformation,<br>comparable to a human hand</span></div>
-    <div class="kpi"><b>86%</b><span>everyday-object grasp success<br>(LEAP 64%, tip-only 32%)</span></div>
+    <div class="viewer" id="viewer">
+      <model-viewer id="hand3d" src="assets/model/pact_hand.glb" poster="assets/img/hand3d_poster.webp"
+        alt="Interactive 3D model of the PACT Hand, final design in the flat pose"
+        camera-controls disable-zoom touch-action="pan-y" interaction-prompt="none"
+        auto-rotate auto-rotate-delay="2500" rotation-per-second="16deg"
+        camera-orbit="-28deg 74deg auto" environment-image="neutral" tone-mapping="neutral"
+        exposure="1.0" shadow-intensity="0.75" shadow-softness="0.9"></model-viewer>
+      <div class="viewer-tag">Interactive 3D &middot; final design</div>
+      <div class="viewer-legend" aria-hidden="true">
+        <span>3D-printed parts <i id="sw-printed" style="background:#b3bfcc"></i></span>
+        <span>Dynamixel servos <i style="background:#1d1f23"></i></span>
+        <span>Fingertip pads <i style="background:#f1f0eb"></i></span>
+      </div>
+      <div class="viewer-bar">
+        <div class="seg" role="group" aria-label="Model display">
+          <button type="button" data-mode="full" aria-pressed="true">Full assembly</button>
+          <button type="button" data-mode="printed" aria-pressed="false">Printed parts</button>
+        </div>
+        <span class="viewer-hint">drag to rotate</span>
+      </div>
+    </div>
   </div>
 
-  <div class="grid2">
-    <figure>
-      <img src="assets/payload_seq.jpg" alt="Replayed grasp-and-lift sequence of the instrumented cylinder">
-      <figcaption>Payload under a per-joint torque cap: the replayed grasp and lift.</figcaption>
-    </figure>
-    <figure>
-      <img src="assets/capacity.png" alt="Capacity staircase: largest mass held reliably at each torque cap">
-      <figcaption>PACT converts its torque budget into payload; the baselines saturate at 1&nbsp;kg.</figcaption>
-    </figure>
+  <div class="wrap">
+    <div class="specs" role="list" aria-label="Hardware specifications">
+      <div class="spec" role="listitem"><div class="v num">17</div><div class="k">Actuated DoF</div><div class="s">one servo per joint</div></div>
+      <div class="spec" role="listitem"><div class="v num">4</div><div class="k">Digits</div><div class="s">thumb, index, middle, ring</div></div>
+      <div class="spec" role="listitem"><div class="v num">1.56&times;</div><div class="k">Human scale</div><div class="s">matched to the LEAP Hand</div></div>
+      <div class="spec" role="listitem"><div class="v num">153&ndash;161<small>mm</small></div><div class="k">Chain length</div><div class="s">per finger</div></div>
+      <div class="spec" role="listitem"><div class="v">XC330</div><div class="k">Servo housing</div><div class="s">Dynamixel</div></div>
+      <div class="spec" role="listitem"><div class="v num">23<small>Hz</small></div><div class="k">Teleoperation</div><div class="s">one RGB camera</div></div>
+    </div>
   </div>
-
-  <figure style="max-width:620px;margin-left:auto;margin-right:auto">
-    <img src="assets/cup.jpg" alt="Rim deformation while holding a loaded paper cup, per hand">
-    <figcaption>Compliant-object handling: rim deformation while holding a 400&nbsp;g-loaded paper cup.
-    PACT matches the human hand; the tip-only ablation crushes the rim most.</figcaption>
-  </figure>
-
-  <div class="grid2">
-    <figure>
-      <img src="assets/ycb.jpg" alt="The ten YCB objects used in the everyday-object comparison">
-      <figcaption>The ten everyday YCB objects (three unseen during design).</figcaption>
-    </figure>
-    <figure>
-      <img src="assets/setup.jpg" alt="Teleoperation setup with a leader arm, one RGB camera, and the arm-mounted hand">
-      <figcaption>Teleoperation setup: one RGB camera, a GELLO leader arm, and the UR5e-mounted hand.</figcaption>
-    </figure>
-  </div>
-
-  <figure>
-    <img src="assets/demos.jpg" alt="Qualitative demonstrations: in-hand stashing, tennis balls, 2-liter bottle, and autonomous ACT pick-and-place">
-    <figcaption>Qualitative demonstrations: in-hand stashing of four objects, two tennis balls rolled
-    on the palm, a 2&nbsp;L bottle lifted, and an ACT policy trained on 54 teleoperated demonstrations
-    autonomously picking and placing a can (17/18 at taught placements, 9/12 held-out).</figcaption>
-  </figure>
 </section>
 
-<section>
-  <h2>Citation</h2>
-  <p class="note">This work is under double-anonymous review. A citation will be provided upon
-  publication.</p>
-  <pre>@article{anonymous2026pact,
+<!-- ============ VIDEO ============ -->
+<section class="block deep" id="video">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="kicker">Overview</div>
+      <h2>Supplementary video</h2>
+    </div>
+    <div class="video-frame">
+      <video controls playsinline preload="none" poster="assets/poster/pact_overview_title.jpg" aria-label="PACT supplementary video with narration">
+        <source src="assets/video/pact_overview.mp4" type="video/mp4">
+      </video>
+    </div>
+    <div class="video-note"><span>2 min 57 s &middot; narrated &middot; synthesized voice</span><span>real time unless a speed-up is marked in the panel</span></div>
+  </div>
+</section>
+
+<!-- ============ AT A GLANCE ============ -->
+<section class="block" id="glance">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="kicker">At a glance</div>
+      <h2>Human posture in, contact over the whole finger out</h2>
+      <p>Compared with the LEAP Hand and a fingertip-only ablation, each evaluated with the same retargeting pipeline and, on hardware, under the same per-joint torque cap.</p>
+    </div>
+    <div class="glance">
+      <a class="stat" href="#retargeting"><div class="v num">3.9<small>mm</small></div><div class="k">All-keypoint posture error</div><div class="c">LEAP Hand: 12.8 mm</div><div class="go">Retargeting &rarr;</div></a>
+      <a class="stat" href="#payload"><div class="v num">2.0<small>kg</small></div><div class="k">Payload at a 0.167 N&middot;m per-joint cap</div><div class="c">LEAP Hand and tip-only: 1.0 kg</div><div class="go">Payload &rarr;</div></a>
+      <a class="stat" href="#cup"><div class="v num">7&times;<small>less</small></div><div class="k">Rim deformation of a held paper cup</div><div class="c">circularity 0.985, human hand 0.978</div><div class="go">Compliant object &rarr;</div></a>
+      <a class="stat" href="#ycb"><div class="v num">86<small>%</small></div><div class="k">Grasp success on ten everyday objects</div><div class="c">LEAP Hand 64% &middot; tip-only 32%</div><div class="go">Everyday objects &rarr;</div></a>
+    </div>
+  </div>
+</section>
+
+<!-- ============ ABSTRACT ============ -->
+<section class="block soft" id="abstract">
+  <div class="wrap abstract">
+    <div>
+      <div class="kicker">Abstract</div>
+      <p>The fidelity of teleoperated demonstrations used for imitation learning is determined by how faithfully a robot hand can replicate the operator&rsquo;s posture. The posture retargeting law that the robot will ultimately execute is typically selected only once the hardware has been finalized. Conventional hand designs are derived from established mechanical principles, so they often neglect human-like grasping postures, which constrains the potential of learning-based dexterous manipulation. We introduce PACT, an optimization based on human grasping postures that jointly optimizes the mechanical parameters of a 17-servo robot hand (link lengths, joint offsets, mounting angles, and base placements) and its nonlinear posture retargeter (a linear human-to-robot joint map, per-joint posture-IK weights, and damping). The optimization enforces full-finger correspondence (MCP, PIP, DIP, and tip of each finger) to human poses from the DexYCB dataset, and is also constrained by physical requirements such as servo interference, assembly clearances, and flat-hand protrusion, so the resulting design can be physically assembled.</p>
+      <p>We fabricate the PACT Hand and validate it through teleoperation experiments and an imitation-learning demonstration. The proposed hand reproduces all human hand keypoints with a kinematic root-mean-square error (RMSE) of 3.9&nbsp;mm, compared to 12.8&nbsp;mm for the LEAP Hand baseline, and keeps all fingertips within 10&nbsp;mm on every grasping posture, while the baseline achieves this for only 21.6% of the poses. Under matched per-joint torque limits, the proposed hand lifts twice the baseline payload, 2&nbsp;kg against 1&nbsp;kg, and deforms a held paper cup seven times less, reaching a deformation level comparable to a human hand. It also achieves an 86% grasping success rate on YCB daily objects, compared to 64% for the baseline. Finally, as a demonstration, an imitation-learning policy trained on demonstrations collected with the PACT Hand achieved a 75% success rate at held-out placements in a can pick-and-place task.</p>
+    </div>
+    <figure class="figure">
+      <div class="frame"><img src="assets/img/teaser.jpg" alt="The PACT Hand, and the same retargeting law mapping a bare-hand posture from one RGB camera onto the hand grasping a mustard bottle" loading="lazy" width="1600" height="1098"></div>
+      <figcaption><b>Fig. 1</b>The PACT Hand (left), co-designed with its posture-IK retargeter. At runtime (right), the same retargeting law that served as the design objective maps a bare-hand posture from a single RGB camera onto the hand.</figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- ============ CO-DESIGN ============ -->
+<section class="block" id="design">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="kicker">01 <span>/</span> Co-design</div>
+      <h2>One law for design, evaluation, and runtime</h2>
+      <p>The retargeter that runs on a robot hand is usually chosen after the hardware is frozen. In PACT it is part of the design: the mechanism parameters (link lengths, joint offsets, mounting angles, base placements) and the retargeter parameters &rho; = (M, w, &lambda;&sup2;), a linear human-to-robot joint map, per-keypoint IK weights and damping, are optimized together. The objective is the residual of that same retargeter over recorded human grasps.</p>
+    </div>
+
+    <div class="features">
+      <div class="feature"><div class="n">01</div><h3>The retargeter is a design variable</h3><p>The optimized rule (M, w, &lambda;&sup2;) is saved with the hardware and loaded unmodified at runtime, so design, evaluation, and physical operation all execute the same law.</p></div>
+      <div class="feature"><div class="n">02</div><h3>Posture, not fingertips</h3><p>The MCP, PIP, DIP, and tip of every finger are matched to human grasping poses from DexYCB. Matching fingertips alone leaves the intermediate joints free to drift into non-human configurations.</p></div>
+      <div class="feature"><div class="n">03</div><h3>Buildable by construction</h3><p>Servo-housing interference, a measured assembly clearance, and flat-palm protrusion enter the same objective one stage at a time, each stage guarded against giving back tracking accuracy.</p></div>
+    </div>
+
+    <div class="stage-wrap">
+      <div>
+        <div class="player">
+          <video id="stagevid" muted playsinline preload="none" poster="assets/poster/stages.jpg" data-src="assets/video/stages.mp4" aria-label="Animation of the staged optimization"></video>
+          <div class="scrub">
+            <button class="pp" id="stagepp" type="button" aria-label="Play or pause"><svg viewBox="0 0 14 14"><path id="ppicon" d="M2 1l11 6-11 6z"/></svg></button>
+            <div class="track">
+              <input type="range" id="stagerange" min="0" max="15.8" step="0.01" value="0" aria-label="Scrub through the optimization stages">
+              <div class="ticks" id="stageticks">
+                <button type="button" data-t="0" style="left:0%">S0</button>
+                <button type="button" data-t="3.5" style="left:22.15%">S1</button>
+                <button type="button" data-t="7.0" style="left:44.3%">S3</button>
+                <button type="button" data-t="10.5" style="left:66.46%">S5</button>
+                <button type="button" data-t="14.4" style="left:100%">Final</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <p class="note" style="margin-top:18px"><b>Watch the thumb.</b> Collision avoidance at S1 pushes it away from the human skeleton (gray); the MCP axis anchor added at S2 pulls it back by S5. Each label lists the constraints added since the previous frame.</p>
+      </div>
+      <div>
+        <h3 style="font-size:18px;margin-bottom:16px">Fabrication constraints, one stage at a time</h3>
+        <ol class="ladder" id="ladder">
+          <li data-s="0"><b>S0</b>Tracking accuracy only: the accuracy ceiling of the kinematic family.</li>
+          <li data-s="1"><b>S1</b>No collision between any two servo housings, across the whole pose distribution.</li>
+          <li data-s="3"><b>S2</b>Robot MCP axes coincide with the human MCP centers.</li>
+          <li data-s="3"><b>S3</b>Fingertip pads stay within 20&deg; of the human pad orientation.</li>
+          <li data-s="5"><b>S4</b>No geometry protrudes below the flat palm.</li>
+          <li data-s="5"><b>S5</b>The retargeter parameters &rho; become design variables.</li>
+          <li data-s="6"><b>S6</b>A measured assembly clearance between stacked servos.</li>
+        </ol>
+        <p style="font-size:14.5px;color:var(--muted);margin-top:14px">Each stage warm-starts from the previous one. From S1 on, a one-sided guard penalizes any per-finger tracking term that rises more than 10% above its value at the start of the stage. The pipeline, including forward kinematics and the unrolled 20-iteration IK, is differentiable in PyTorch.</p>
+      </div>
+    </div>
+
+    <figure class="figure" style="margin-top:44px">
+      <div class="frame"><img src="assets/img/pipeline.png" alt="Optimized joint chains and servo volumes over the human skeleton after stages S0, S1, S3 and S5, and the final design" loading="lazy" width="2200" height="470"></div>
+      <figcaption><b>Fig. 2</b>Fabrication constraints reshaping the hand, stage by stage. Optimized joint chains and as-built servo volumes over the human skeleton at the flat-hand pose after S0, S1, S3, and S5 (blue: flexion, salmon: abduction; gray: human skeleton at 1.56&times;). Right: the final design.</figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- ============ HARDWARE ============ -->
+<section class="block soft" id="hardware">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="kicker">02 <span>/</span> Hardware</div>
+      <h2>The PACT Hand</h2>
+      <p>The optimized mechanism, fabricated from Dynamixel servos and 3D-printed brackets. All bracket geometry is exported directly from the optimized parameters, with no manual re-dimensioning between optimization and fabrication.</p>
+    </div>
+    <div class="hw">
+      <div>
+        <div class="photo-dark"><img src="assets/img/hand_photo.jpg" alt="Photograph of the PACT Hand in the flat pose" loading="lazy" width="1400" height="1399"></div>
+        <div class="kp">
+          <img src="assets/img/keypoints.jpg" alt="Human hand with the matched keypoints of each finger drawn over it" loading="lazy" width="428" height="324">
+          <p><b style="color:var(--ink)">Full-finger correspondence.</b> The keypoints matched in the optimization: MCP, PIP, DIP and tip of every finger. Inside the IK, the PIP, DIP and tip keypoints each carry one shared weight; the MCP is matched through where the finger base sits on the palm.</p>
+        </div>
+      </div>
+      <div>
+        <dl class="speclist">
+          <dt>Digits</dt><dd>Thumb, index, middle, ring. <span class="muted">The four-digit layout follows the LEAP Hand, which likewise omits the little finger.</span></dd>
+          <dt>Actuators</dt><dd>17 Dynamixel servos: four in each finger, five in the thumb. <span class="muted">LEAP Hand: 16.</span></dd>
+          <dt>Joint modules</dt><dd>Two-axis MCP module on each finger, three-axis CMC module on the thumb.</dd>
+          <dt>Distal chain</dt><dd>Serial servo chains mounted dorsally, housings opposite the finger pads; the final pair stacked case to case.</dd>
+          <dt>Scale</dt><dd>1.56&times; human, the mean ratio of the LEAP Hand&rsquo;s kinematic chain length to human finger length. <span class="muted">Chosen to match the baseline, not as a lower limit.</span></dd>
+          <dt>Chain length</dt><dd>153&ndash;161&nbsp;mm per finger, distributed with human proportions. <span class="muted">LEAP Hand: 145&ndash;153&nbsp;mm, concentrated in actuator housings and a rigid 50&nbsp;mm fingertip block.</span></dd>
+          <dt>Servo housing</dt><dd>XC330 envelope, used in the optimization and shared by the servos of the physical hand.</dd>
+          <dt>Teleoperation</dt><dd>One RGB camera &rarr; WiLoR (MANO) &rarr; the posture-IK rule saved with the design &rarr; servos, at roughly 23&nbsp;Hz.</dd>
+        </dl>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ RETARGETING ============ -->
+<section class="block" id="retargeting">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="kicker">03 <span>/</span> Retargeting accuracy</div>
+      <h2>The whole finger lands where the human&rsquo;s does</h2>
+      <p>Operator poses come from a single RGB camera. No per-user calibration or parameter tuning was performed in any experiment: the retargeter saved with the design was deployed as is.</p>
+    </div>
+
+    <div class="live">
+      <figure class="clip land c-pact" style="margin:0">
+        <div class="bar"></div>
+        <div class="hd"><b>PACT Hand, live teleoperation</b><span class="chip">real time &middot; uncut 45 s</span></div>
+        <div class="media"><video muted loop playsinline preload="none" poster="assets/poster/retarget_live.jpg" data-src="assets/video/retarget_live.mp4" aria-label="Live teleoperation: the robot hand follows the operator's bare hand"></video></div>
+        <figcaption class="ft">The operator&rsquo;s bare hand (right) drives the hand (left) through the co-designed posture-IK rule.</figcaption>
+      </figure>
+      <div class="toggle-fig">
+        <div class="head">
+          <h4>Best / median / worst training pose</h4>
+          <div class="seg" role="group" aria-label="Hand shown">
+            <button type="button" data-skel="pact" aria-pressed="true">PACT</button>
+            <button type="button" data-skel="leap" aria-pressed="false">LEAP</button>
+          </div>
+        </div>
+        <div class="figure"><div class="frame"><div class="stack">
+          <img id="skel-pact" src="assets/img/skel_pact.jpg" alt="PACT Hand chains over human keypoints, best, median and worst pose" loading="lazy" width="1600" height="975">
+          <img id="skel-leap" class="hide" src="assets/img/skel_leap.jpg" alt="LEAP Hand chains over human keypoints, best, median and worst pose" loading="lazy" width="1600" height="975">
+        </div></div></div>
+        <div class="skel-cap"><span>robot chain: saturated</span><span>human keypoints: light</span><span>top: palm view &middot; bottom: side view</span></div>
+      </div>
+    </div>
+
+    <div class="tbl-wrap" style="margin-top:44px">
+      <table class="bt">
+        <caption><b>Table I</b>Retargeting accuracy in human-scale mm, on the training set (1,788 poses) and the test set (277 poses). HPCR: share of poses whose worst fingertip error is within 10 mm.</caption>
+        <thead><tr><th>Hand</th><th>Set</th><th>All-kp RMSE</th><th>Tip RMSE</th><th>MCP/PIP</th><th>IP/DIP</th><th>HPCR</th></tr></thead>
+        <tbody>
+          <tr class="pact"><td><span class="sw" style="background:var(--pact)"></span>PACT (17)</td><td>train</td><td class="best">3.90</td><td>1.84</td><td class="best">4.39</td><td class="best">4.80</td><td class="best">100.0%</td></tr>
+          <tr class="pact"><td><span class="sw" style="background:var(--pact)"></span>PACT (17)</td><td>test</td><td class="best">3.88</td><td>1.66</td><td>&mdash;</td><td>&mdash;</td><td class="best">100.0%</td></tr>
+          <tr class="sep"><td><span class="sw" style="background:var(--leap)"></span>LEAP Hand</td><td>train</td><td>12.82</td><td>13.45</td><td>14.13</td><td>10.60</td><td>21.6%</td></tr>
+          <tr><td><span class="sw" style="background:var(--leap)"></span>LEAP Hand</td><td>test</td><td>13.09</td><td>13.59</td><td>&mdash;</td><td>&mdash;</td><td>7.9%</td></tr>
+          <tr class="sep"><td><span class="sw" style="background:var(--tip)"></span>Tip-only (16)</td><td>train</td><td>23.66</td><td class="best">2.46</td><td>26.33</td><td>31.31</td><td>99.5%</td></tr>
+          <tr><td><span class="sw" style="background:var(--tip)"></span>Tip-only (16)</td><td>test</td><td>22.79</td><td class="best">&lt;0.01</td><td>&mdash;</td><td>&mdash;</td><td class="best">100.0%</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callouts">
+      <div class="callout"><div class="v num">4.9 &lt; 6.9<small style="font-size:15px;font-weight:600"> mm</small></div><h4>The worst beats the best</h4><p>Pose-wise all-keypoint RMSE, best / median / worst: 3.4 / 3.9 / 4.9&nbsp;mm for PACT against 6.9 / 12.0 / 35.9&nbsp;mm for the LEAP Hand. PACT&rsquo;s worst training pose is still more accurate than the baseline&rsquo;s best.</p></div>
+      <div class="callout"><div class="v num">4.06<small style="font-size:15px;font-weight:600"> mm</small></div><h4>Objects never seen in design</h4><p>On 1,421 grasps of twelve YCB objects absent from the design set, PACT degrades by 0.16&nbsp;mm (3.90 &rarr; 4.06) and keeps 99.6% HPCR. The one grasp type missing from the design set, the pitcher&rsquo;s handle, is the costliest at 4.74&nbsp;mm.</p></div>
+      <div class="callout"><div class="v num">2.88 &rarr; 1.84<small style="font-size:15px;font-weight:600"> mm</small></div><h4>What the co-designed retargeter adds</h4><p>With the retargeter reset to its default, the hardware alone reaches 3.47&nbsp;mm and 100% HPCR, 3.7&times; better than LEAP. The co-designed rule moves accuracy to the contact interface: tip RMSE 2.88 &rarr; 1.84&nbsp;mm for a 0.43&nbsp;mm all-keypoint concession.</p></div>
+    </div>
+
+    <p class="note" style="margin-top:28px"><b>Baselines.</b> The LEAP Hand runs the identical posture-IK pipeline on its published kinematics. The tip-only ablation is optimized with the full PACT pipeline and all physical constraints, but its human-matching objective covers fingertips only, at design time and in the runtime IK; it ends up with 16 actuators, the LEAP budget. Accuracy is computed by forward kinematics on the commanded joint configurations.</p>
+  </div>
+</section>
+
+<!-- ============ EXPERIMENTS ============ -->
+<section class="block soft" id="experiments">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="kicker">04 <span>/</span> Experiments</div>
+      <h2>Same torque per joint, different hands</h2>
+      <p>All hardware comparisons run current-based position control with each motor&rsquo;s commanded current set from its torque constant, so every joint of every hand operates under an identical torque cap. Each hand is mounted on a UR5e arm.</p>
+    </div>
+
+    <!-- payload -->
+    <div class="sub" id="payload" style="margin-top:0">
+      <h3>Payload: 1300 g at 0.167 N&middot;m</h3>
+      <p class="intro">A rigid 3D-printed replica of the YCB master chef can (102&nbsp;mm in diameter), loaded so its center of mass sits at the grasp band. The grasp was teleoperated once per hand and the recorded command replayed identically in every trial; the UR5e then executes one fixed lift of 150&nbsp;mm at 50&nbsp;mm/s with a 3&nbsp;s hold.</p>
+      <p class="swipe-hint">swipe for all three hands &rarr;</p>
+      <div class="clips c3 keep3">
+        <figure class="clip c-pact"><div class="bar"></div><div class="hd"><b>PACT Hand</b><span class="chip pact">5/5</span></div><div class="media"><video muted loop playsinline preload="none" poster="assets/poster/pay_pact.jpg" data-src="assets/video/pay_pact.mp4" aria-label="PACT Hand lifting 1300 g"></video><span class="out chip ok">held</span><span class="badge rt">1&times;</span></div><figcaption class="ft">Holds 1300&nbsp;g through the lift and the 3&nbsp;s hold.</figcaption></figure>
+        <figure class="clip c-leap"><div class="bar"></div><div class="hd"><b>LEAP Hand</b><span class="chip">0/6</span></div><div class="media"><video muted loop playsinline preload="none" poster="assets/poster/pay_leap.jpg" data-src="assets/video/pay_leap.mp4" aria-label="LEAP Hand failing to hold 1300 g"></video><span class="out chip bad">dropped</span><span class="badge rt">1&times;</span></div><figcaption class="ft">Loses the cylinder as the lift begins; LEAP saturates near 1&nbsp;kg regardless of the cap.</figcaption></figure>
+        <figure class="clip c-tip"><div class="bar"></div><div class="hd"><b>Tip-only</b><span class="chip">0/5</span></div><div class="media"><video muted loop playsinline preload="none" poster="assets/poster/pay_tip.jpg" data-src="assets/video/pay_tip.mp4" aria-label="Tip-only hand dropping 1300 g"></video><span class="out chip bad">not held</span><span class="badge rt">1&times;</span></div><figcaption class="ft">Of its 31 failures at 1300&nbsp;g, twenty lifted and then dropped; one failed to lift.</figcaption></figure>
+      </div>
+
+      <div style="margin-top:34px;display:grid;gap:26px">
+        <figure class="figure">
+          <div class="frame"><img src="assets/img/payload_grid.png" alt="Success grid over six masses and seven torque caps for the three hands" loading="lazy" width="2000" height="597"></div>
+          <figcaption><b>Grid</b>Successes / valid trials over six masses (400&ndash;2000&nbsp;g) &times; seven caps (0.067&ndash;0.266&nbsp;N&middot;m), at least five trials per cell.</figcaption>
+        </figure>
+        <figure class="figure" style="max-width:860px">
+          <div class="frame"><img src="assets/img/capacity.png" alt="Largest mass held reliably at each torque cap" loading="lazy" width="1600" height="442"></div>
+          <figcaption><b>Fig. 3</b>Largest mass held reliably at each cap. PACT: 400&ndash;1300&nbsp;g succeed at the lowest cap, 1600&nbsp;g needs 0.100&nbsp;N&middot;m, 2000&nbsp;g needs 0.167&nbsp;N&middot;m. The LEAP Hand saturates near 1&nbsp;kg regardless of the cap; the tip-only hand stops at 1000&nbsp;g. Baseline curves are offset by 20&nbsp;g to stay distinguishable.</figcaption>
+        </figure>
+      </div>
+
+      <h4 style="font-size:18px;margin:40px 0 6px">Each hand at its capacity</h4>
+      <p style="font-size:15px;color:var(--muted);margin-bottom:16px;max-width:780px">The largest mass each hand holds reliably, shown at the cap where the clip was recorded. Neither baseline reliably holds anything heavier under any cap, so at the common 0.167&nbsp;N&middot;m their capacity is also 1000&nbsp;g.</p>
+      <p class="swipe-hint">swipe for all three hands &rarr;</p>
+      <div class="clips c3 keep3">
+        <figure class="clip c-pact"><div class="bar"></div><div class="hd"><b>PACT Hand</b><span class="chip pact">2000 g &middot; 0.167</span></div><div class="media"><video muted loop playsinline preload="none" poster="assets/poster/cap_pact.jpg" data-src="assets/video/cap_pact.mp4" aria-label="PACT Hand holding 2000 g"></video><span class="badge rt">1&times;</span></div></figure>
+        <figure class="clip c-leap"><div class="bar"></div><div class="hd"><b>LEAP Hand</b><span class="chip">1000 g &middot; 0.100</span></div><div class="media"><video muted loop playsinline preload="none" poster="assets/poster/cap_leap.jpg" data-src="assets/video/cap_leap.mp4" aria-label="LEAP Hand holding 1000 g"></video><span class="badge rt">1&times;</span></div></figure>
+        <figure class="clip c-tip"><div class="bar"></div><div class="hd"><b>Tip-only</b><span class="chip">1000 g &middot; 0.100</span></div><div class="media"><video muted loop playsinline preload="none" poster="assets/poster/cap_tip.jpg" data-src="assets/video/cap_tip.mp4" aria-label="Tip-only hand holding 1000 g"></video><span class="badge rt">1&times;</span></div></figure>
+      </div>
+    </div>
+
+    <!-- cup -->
+    <div class="sub" id="cup">
+      <h3>A compliant object: a 400 g paper cup</h3>
+      <p class="intro">The grasp is replayed identically in every trial. All 75 robot trials held the cup, so what separates the hands is deformation, not holding. A red band on the inner wall is detected from above; its circularity 4&pi;A/P&sup2; is taken after mapping the same trial&rsquo;s pre-grasp rim to a unit circle, so 1.000 is that trial&rsquo;s own undeformed rim.</p>
+      <p class="swipe-hint">swipe for all three hands &rarr;</p>
+      <div class="clips c3 keep3">
+        <figure class="clip c-pact"><div class="bar"></div><div class="hd"><b>PACT Hand</b><span class="chip pact">0.985</span></div><div class="media"><video muted loop playsinline preload="none" poster="assets/poster/cup_pact.jpg" data-src="assets/video/cup_pact.mp4" aria-label="PACT Hand lifting the paper cup by 1 cm"></video><span class="badge rt">1 cm lift &middot; 1&times;</span></div></figure>
+        <figure class="clip c-leap"><div class="bar"></div><div class="hd"><b>LEAP Hand</b><span class="chip">0.875</span></div><div class="media"><video muted loop playsinline preload="none" poster="assets/poster/cup_leap.jpg" data-src="assets/video/cup_leap.mp4" aria-label="LEAP Hand lifting the paper cup by 1 cm"></video><span class="badge rt">1 cm lift &middot; 1&times;</span></div></figure>
+        <figure class="clip c-tip"><div class="bar"></div><div class="hd"><b>Tip-only</b><span class="chip">0.827</span></div><div class="media"><video muted loop playsinline preload="none" poster="assets/poster/cup_tip.jpg" data-src="assets/video/cup_tip.mp4" aria-label="Tip-only hand lifting the paper cup by 1 cm"></video><span class="badge rt">1 cm lift &middot; 1&times;</span></div></figure>
+      </div>
+      <figure class="figure" style="margin-top:26px">
+        <div class="frame"><img src="assets/img/cup_rims.jpg" alt="Top view of the cup rim held by each hand and by a human hand, with the detected band in green and circularity values" loading="lazy" width="2200" height="432"></div>
+        <figcaption><b>Fig. 4</b>Rim deformation holding the 400&nbsp;g cup, trials at 0.167&nbsp;N&middot;m. The detected band is shown in green, with pre-frame normalized circularity at top left.</figcaption>
+      </figure>
+      <div class="grid-2" style="margin-top:26px;align-items:start">
+        <div class="tbl-wrap">
+          <table class="bt">
+            <caption><b>Circularity</b>mean &plusmn; s.d.; five caps (0.133&ndash;0.266&nbsp;N&middot;m) &times; five trials per hand, five human grasps.</caption>
+            <thead><tr><th>Hand</th><th>Circularity</th><th>Departure vs. PACT</th></tr></thead>
+            <tbody>
+              <tr class="pact"><td><span class="sw" style="background:var(--pact)"></span>PACT Hand</td><td class="best">0.9847 &plusmn; 0.0020</td><td>1&times;</td></tr>
+              <tr><td><span class="sw" style="background:var(--human)"></span>Human hand</td><td>0.9777 &plusmn; 0.0089</td><td class="muted">reference</td></tr>
+              <tr><td><span class="sw" style="background:var(--leap)"></span>LEAP Hand</td><td>0.8752 &plusmn; 0.0120</td><td>7&times;</td></tr>
+              <tr><td><span class="sw" style="background:var(--tip)"></span>Tip-only</td><td>0.8272 &plusmn; 0.0304</td><td>11.3&times;</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div>
+          <p class="note"><b>On par with a human hand.</b> The LEAP Hand departs from a circle seven times more than PACT (0.125 against 0.015), the tip-only ablation 11.3 times. Trial-to-trial spread is 6.1&times; and 15&times; that of PACT although the same recorded grasp is replayed every time, and only the tip-only hand deforms the cup measurably more as the cap rises: contact concentrated on fingertips converts torque straight into deformation.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ycb -->
+    <div class="sub" id="ycb">
+      <h3>Everyday objects: ten YCB objects, teleoperated live</h3>
+      <div class="ycb-top">
+        <div>
+          <figure class="figure">
+            <div class="frame"><img src="assets/img/ycb_objects.jpg" alt="The ten YCB objects used in the grasping trials" loading="lazy" width="1400" height="1050"></div>
+            <figcaption><b>Objects</b>The ten YCB objects: seven of the eight design objects (scissors unavailable) and three never seen during optimization, 74&ndash;859&nbsp;g.</figcaption>
+          </figure>
+          <p style="font-size:15px;color:var(--muted);margin-top:18px">One grasp strategy per object, chosen in advance, for all three hands. A single operator teleoperates live at a fixed 0.167&nbsp;N&middot;m cap; a trial succeeds if the hand lifts the object and holds it for 3&nbsp;s. Five scored trials per object and hand, at most 60&nbsp;s of teleoperation each.</p>
+        </div>
+        <div class="tbl-wrap">
+          <table class="bt">
+            <caption><b>Table II</b>Successes out of five scored trials at 0.167&nbsp;N&middot;m. &dagger;&nbsp;unseen during design, &Dagger;&nbsp;grip tape, identical for every hand.</caption>
+            <thead><tr><th>Object</th><th>PACT</th><th>LEAP</th><th>Tip-only</th></tr></thead>
+            <tbody>
+              <tr><td>master chef can</td><td class="best">5/5</td><td>3/5</td><td>2/5</td></tr>
+              <tr><td>cracker box</td><td class="best">4/5</td><td>2/5</td><td>0/5</td></tr>
+              <tr><td>sugar box</td><td class="best">5/5</td><td class="best">5/5</td><td>4/5</td></tr>
+              <tr><td>tomato soup can</td><td>2/5</td><td class="best">4/5</td><td>0/5</td></tr>
+              <tr><td>pudding box</td><td class="best">5/5</td><td>4/5</td><td class="best">5/5</td></tr>
+              <tr><td>banana&Dagger;</td><td class="best">5/5</td><td>3/5</td><td>0/5</td></tr>
+              <tr><td>bowl&Dagger;</td><td class="best">4/5</td><td>3/5</td><td class="best">4/5</td></tr>
+              <tr><td>mug&dagger;</td><td class="best">3/5</td><td>1/5</td><td>0/5</td></tr>
+              <tr><td>mustard bottle&dagger;</td><td class="best">5/5</td><td>2/5</td><td>0/5</td></tr>
+              <tr><td>power drill&dagger;</td><td class="best">5/5</td><td class="best">5/5</td><td>1/5</td></tr>
+              <tr class="total"><td>all</td><td>43/50 (86%)</td><td>32/50 (64%)</td><td>16/50 (32%)</td></tr>
+            </tbody>
+          </table>
+          <div class="times">
+            <div class="time pact"><div class="v num">10.6 s</div><div class="k">PACT, time per success</div></div>
+            <div class="time leap"><div class="v num">21.8 s</div><div class="k">LEAP, time per success</div></div>
+            <div class="time tip"><div class="v num">43.5 s</div><div class="k">Tip-only, time per success</div></div>
+          </div>
+          <p style="font-size:14px;color:var(--muted);margin-top:12px">Total teleoperation time divided by successes. Counting unfinished trials at the 60&nbsp;s limit, the median trial takes 8.1&nbsp;s and 12.8&nbsp;s for the first two hands and the full 60&nbsp;s for the tip-only design; PACT is faster on all ten objects.</p>
+        </div>
+      </div>
+
+      <h4 style="font-size:18px;margin-bottom:6px">Trials, object by object</h4>
+      <p style="font-size:15px;color:var(--muted);margin-bottom:18px">Each clip plays one recorded trial without cuts, sped up to about 12&nbsp;s (factor marked). The outcome shown is the one that occurred in the majority of that hand&rsquo;s five scored trials.</p>
+      <div class="tabs" role="tablist" aria-label="Object">
+        <button role="tab" aria-selected="true" aria-controls="t-mustard" id="tab-mustard">Mustard bottle&dagger; <span class="sc">5 &middot; 2 &middot; 0</span></button>
+        <button role="tab" aria-selected="false" aria-controls="t-banana" id="tab-banana">Banana&Dagger; <span class="sc">5 &middot; 3 &middot; 0</span></button>
+        <button role="tab" aria-selected="false" aria-controls="t-mug" id="tab-mug">Mug&dagger;, from above <span class="sc">3 &middot; 1 &middot; 0</span></button>
+        <button role="tab" aria-selected="false" aria-controls="t-can" id="tab-can">Master chef can <span class="sc">5 &middot; 3 &middot; 2</span></button>
+        <button role="tab" aria-selected="false" aria-controls="t-soup" id="tab-soup">Tomato soup can <span class="sc">2 &middot; 4 &middot; 0</span></button>
+      </div>
+
+      <div class="tabpanel" role="tabpanel" id="t-mustard" aria-labelledby="tab-mustard">
+        <p class="swipe-hint">swipe for all three hands &rarr;</p>
+      <div class="clips c3 keep3">
+          <figure class="clip c-pact"><div class="bar"></div><div class="hd"><b>PACT Hand</b><span class="chip pact">5/5</span></div><div class="media"><video muted loop playsinline preload="none" poster="assets/poster/ycb_mustard_pact.jpg" data-src="assets/video/ycb_mustard_pact.mp4" aria-label="PACT Hand, mustard bottle"></video><span class="out chip ok">success</span><span class="badge">&times;2.4</span></div></figure>
+          <figure class="clip c-leap"><div class="bar"></div><div class="hd"><b>LEAP Hand</b><span class="chip">2/5</span></div><div class="media"><video muted loop playsinline preload="none" poster="assets/poster/ycb_mustard_leap.jpg" data-src="assets/video/ycb_mustard_leap.mp4" aria-label="LEAP Hand, mustard bottle"></video><span class="out chip bad">failure</span><span class="badge">&times;1.5</span></div></figure>
+          <figure class="clip c-tip"><div class="bar"></div><div class="hd"><b>Tip-only</b><span class="chip">0/5</span></div><div class="media"><video muted loop playsinline preload="none" poster="assets/poster/ycb_mustard_tip.jpg" data-src="assets/video/ycb_mustard_tip.mp4" aria-label="Tip-only hand, mustard bottle"></video><span class="out chip bad">failure</span><span class="badge">&times;1.5</span></div></figure>
+        </div>
+        <p class="tab-note">Never seen during design. The LEAP Hand tips the bottle over during the grasp; the tip-only hand lifts it and drops it.</p>
+      </div>
+      <div class="tabpanel" role="tabpanel" id="t-banana" aria-labelledby="tab-banana" hidden>
+        <p class="swipe-hint">swipe for all three hands &rarr;</p>
+      <div class="clips c3 keep3">
+          <figure class="clip c-pact"><div class="bar"></div><div class="hd"><b>PACT Hand</b><span class="chip pact">5/5</span></div><div class="media"><video muted loop playsinline preload="none" poster="assets/poster/ycb_banana_pact.jpg" data-src="assets/video/ycb_banana_pact.mp4" aria-label="PACT Hand, banana"></video><span class="out chip ok">success</span><span class="badge">&times;2.8</span></div></figure>
+          <figure class="clip c-leap"><div class="bar"></div><div class="hd"><b>LEAP Hand</b><span class="chip">3/5</span></div><div class="media"><video muted loop playsinline preload="none" poster="assets/poster/ycb_banana_leap.jpg" data-src="assets/video/ycb_banana_leap.mp4" aria-label="LEAP Hand, banana"></video><span class="out chip ok">success</span><span class="badge">&times;2.7</span></div></figure>
+          <figure class="clip c-tip"><div class="bar"></div><div class="hd"><b>Tip-only</b><span class="chip">0/5</span></div><div class="media"><video muted loop playsinline preload="none" poster="assets/poster/ycb_banana_tip.jpg" data-src="assets/video/ycb_banana_tip.mp4" aria-label="Tip-only hand, banana"></video><span class="out chip bad">failure</span><span class="badge">&times;1.6</span></div></figure>
+        </div>
+        <p class="tab-note">The banana carries a band of grip tape, identical for every hand. The tip-only hand rises while the banana stays on the table.</p>
+      </div>
+      <div class="tabpanel" role="tabpanel" id="t-mug" aria-labelledby="tab-mug" hidden>
+        <p class="swipe-hint">swipe for all three hands &rarr;</p>
+      <div class="clips c3 keep3">
+          <figure class="clip c-pact"><div class="bar"></div><div class="hd"><b>PACT Hand</b><span class="chip pact">3/5</span></div><div class="media"><video muted loop playsinline preload="none" poster="assets/poster/ycb_mug_pact.jpg" data-src="assets/video/ycb_mug_pact.mp4" aria-label="PACT Hand, mug"></video><span class="out chip ok">success</span><span class="badge">&times;2.3</span></div></figure>
+          <figure class="clip c-leap"><div class="bar"></div><div class="hd"><b>LEAP Hand</b><span class="chip">1/5</span></div><div class="media"><video muted loop playsinline preload="none" poster="assets/poster/ycb_mug_leap.jpg" data-src="assets/video/ycb_mug_leap.mp4" aria-label="LEAP Hand, mug"></video><span class="out chip bad">failure</span><span class="badge">&times;1.8</span></div></figure>
+          <figure class="clip c-tip"><div class="bar"></div><div class="hd"><b>Tip-only</b><span class="chip">0/5</span></div><div class="media"><video muted loop playsinline preload="none" poster="assets/poster/ycb_mug_tip.jpg" data-src="assets/video/ycb_mug_tip.mp4" aria-label="Tip-only hand, mug"></video><span class="out chip bad">failure</span><span class="badge">&times;1.8</span></div></figure>
+        </div>
+        <p class="tab-note">The handle is sized for human fingers and is inaccessible at 1.56&times; scale, so the mug is always grasped from above. This top-down grasp is one of the two places PACT fails.</p>
+      </div>
+      <div class="tabpanel" role="tabpanel" id="t-can" aria-labelledby="tab-can" hidden>
+        <p class="swipe-hint">swipe for all three hands &rarr;</p>
+      <div class="clips c3 keep3">
+          <figure class="clip c-pact"><div class="bar"></div><div class="hd"><b>PACT Hand</b><span class="chip pact">5/5</span></div><div class="media"><video muted loop playsinline preload="none" poster="assets/poster/ycb_can_pact.jpg" data-src="assets/video/ycb_can_pact.mp4" aria-label="PACT Hand, master chef can"></video><span class="out chip ok">success</span><span class="badge">&times;1.8</span></div></figure>
+          <figure class="clip c-leap"><div class="bar"></div><div class="hd"><b>LEAP Hand</b><span class="chip">3/5</span></div><div class="media"><video muted loop playsinline preload="none" poster="assets/poster/ycb_can_leap.jpg" data-src="assets/video/ycb_can_leap.mp4" aria-label="LEAP Hand, master chef can"></video><span class="out chip ok">success</span><span class="badge">&times;1.8</span></div></figure>
+          <figure class="clip c-tip"><div class="bar"></div><div class="hd"><b>Tip-only</b><span class="chip">2/5</span></div><div class="media"><video muted loop playsinline preload="none" poster="assets/poster/ycb_can_tip.jpg" data-src="assets/video/ycb_can_tip.mp4" aria-label="Tip-only hand, master chef can"></video><span class="out chip bad">failure</span><span class="badge">&times;3.1</span></div></figure>
+        </div>
+        <p class="tab-note">The tip-only hand keeps trying to close a grasp that never lifts the can.</p>
+      </div>
+      <div class="tabpanel" role="tabpanel" id="t-soup" aria-labelledby="tab-soup" hidden>
+        <p class="swipe-hint">swipe for all three hands &rarr;</p>
+      <div class="clips c3 keep3">
+          <figure class="clip c-pact"><div class="bar"></div><div class="hd"><b>PACT Hand</b><span class="chip pact">2/5</span></div><div class="media"><video muted loop playsinline preload="none" poster="assets/poster/ycb_soup_pact.jpg" data-src="assets/video/ycb_soup_pact.mp4" aria-label="PACT Hand, tomato soup can"></video><span class="out chip bad">failure</span><span class="badge">&times;2.2</span></div></figure>
+          <figure class="clip c-leap"><div class="bar"></div><div class="hd"><b>LEAP Hand</b><span class="chip">4/5</span></div><div class="media"><video muted loop playsinline preload="none" poster="assets/poster/ycb_soup_leap.jpg" data-src="assets/video/ycb_soup_leap.mp4" aria-label="LEAP Hand, tomato soup can"></video><span class="out chip ok">success</span><span class="badge">&times;1.8</span></div></figure>
+          <figure class="clip c-tip"><div class="bar"></div><div class="hd"><b>Tip-only</b><span class="chip">0/5</span></div><div class="media"><video muted loop playsinline preload="none" poster="assets/poster/ycb_soup_tip.jpg" data-src="assets/video/ycb_soup_tip.mp4" aria-label="Tip-only hand, tomato soup can"></video><span class="out chip bad">failure</span><span class="badge">&times;1.6</span></div></figure>
+        </div>
+        <p class="tab-note"><b style="color:var(--ink)">Where PACT trails.</b> The slender soup can is the one object of ten on which PACT scores below the LEAP Hand: at 1.56&times; scale its fingertips are oversized for small features.</p>
+      </div>
+
+      <p class="note" style="margin-top:30px"><b>Failure modes.</b> The LEAP Hand slips, lets objects twist in hand, and moves fingers involuntarily when its IK jumps between joint configurations that reach the same fingertip target: it initiates grasps but fails to maintain them. The tip-only hand&rsquo;s dominant failure is the object slipping out between the fingers; it never forms a continuous holding surface. PACT&rsquo;s failures are confined to the slender soup can and the top-down mug grasp. The heaviest object, 859&nbsp;g, stays below the 1&nbsp;kg capacity measured for the LEAP Hand, so these failures are contact failures, not load failures.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ DEMOS ============ -->
+<section class="block" id="demos">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="kicker">05 <span>/</span> Demonstrations</div>
+      <h2>Arm&ndash;hand teleoperation and imitation learning</h2>
+      <p>A GELLO leader arm drives the UR5e while the same retargeter drives the hand from the camera. Each clip is shown end to end; the speed-up is marked.</p>
+    </div>
+    <p class="swipe-hint">swipe for all three demonstrations &rarr;</p>
+      <div class="clips c3 keep3">
+      <figure class="clip c-pact"><div class="bar"></div><div class="hd"><b>Four objects, stashed in hand</b></div><div class="media"><video muted loop playsinline preload="none" poster="assets/poster/demo_stash.jpg" data-src="assets/video/demo_stash.mp4" aria-label="Four objects stashed in the hand"></video><span class="badge">&times;3</span></div></figure>
+      <figure class="clip c-pact"><div class="bar"></div><div class="hd"><b>Two tennis balls, rolled on the palm</b></div><div class="media"><video muted loop playsinline preload="none" poster="assets/poster/demo_tennis.jpg" data-src="assets/video/demo_tennis.mp4" aria-label="Two tennis balls rolled on the palm"></video><span class="badge">&times;2</span></div></figure>
+      <figure class="clip c-pact"><div class="bar"></div><div class="hd"><b>2 L bottle, about 2.0 kg</b></div><div class="media"><video muted loop playsinline preload="none" poster="assets/poster/demo_bottle.jpg" data-src="assets/video/demo_bottle.mp4" aria-label="A 2 L bottle grasped, lifted and placed"></video><span class="badge">&times;2.5</span></div></figure>
+    </div>
+
+    <div class="sub">
+      <div class="grid-2" style="align-items:start">
+        <div class="clips c2">
+          <figure class="clip c-pact"><div class="bar"></div><div class="hd"><b>Taught placement</b><span class="chip pact">94% &middot; 17/18</span></div><div class="media"><video muted loop playsinline preload="none" poster="assets/poster/act_taught.jpg" data-src="assets/video/act_taught.mp4" aria-label="ACT policy placing the can at a taught placement"></video><span class="out chip ok">autonomous</span><span class="badge">&times;1.5</span></div></figure>
+          <figure class="clip c-pact"><div class="bar"></div><div class="hd"><b>Held-out placement</b><span class="chip pact">75% &middot; 9/12</span></div><div class="media"><video muted loop playsinline preload="none" poster="assets/poster/act_heldout.jpg" data-src="assets/video/act_heldout.mp4" aria-label="ACT policy placing the can at a held-out placement"></video><span class="out chip ok">autonomous</span><span class="badge">&times;1.5</span></div></figure>
+        </div>
+        <div>
+          <h3 style="font-size:25px;margin-bottom:12px">Imitation learning with an ACT policy</h3>
+          <p style="color:var(--muted)">An ACT policy trained on 54 teleoperated demonstrations of can-to-tray pick-and-place, collected with the PACT Hand, runs autonomously: 94% success at taught placements (17 of 18 trials) and 75% at held-out ones (9 of 12). It is shown as a demonstration of the intended use rather than as a contribution.</p>
+          <figure class="figure" style="margin-top:18px">
+            <div class="frame"><img src="assets/img/setup.jpg" alt="Teleoperation setup with a GELLO leader arm, one RGB camera and the UR5e-mounted hand" loading="lazy" width="958" height="740"></div>
+            <figcaption><b>Setup</b>Operator with a GELLO leader arm, one RGB camera, and the UR5e-mounted hand.</figcaption>
+          </figure>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ RELEASE ============ -->
+<section class="block soft" id="release">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="kicker">06 <span>/</span> Open source</div>
+      <h2>Release</h2>
+      <p>Hardware files and code will be released upon publication.</p>
+    </div>
+    <div class="release">
+      <div class="rel"><div class="n">01</div><h3>Parts</h3><p>Bill of materials: servos, printed parts, fasteners and electronics.</p><span class="chip">upon publication</span></div>
+      <div class="rel"><div class="n">02</div><h3>CAD</h3><p>Printable parts of the final design.</p><span class="chip">upon publication</span></div>
+      <div class="rel"><div class="n">03</div><h3>Assembly</h3><p>Build and wiring guide.</p><span class="chip">upon publication</span></div>
+      <div class="rel"><div class="n">04</div><h3>Software</h3><p>Retargeter and teleoperation code.</p><span class="chip">upon publication</span></div>
+      <a class="rel" href="#citation"><div class="n">05</div><h3>Citation</h3><p>BibTeX for the paper under review.</p><span class="chip pact">available &darr;</span></a>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CITATION ============ -->
+<section class="block" id="citation">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="kicker">Citation</div>
+      <h2>BibTeX</h2>
+    </div>
+    <div class="cite">
+      <button class="copy" type="button" id="copybib">Copy</button>
+<pre id="bib">@article{anonymous2026pact,
   title  = {PACT: Posture-Aligned Co-Design Technique for Hand Configuration
             and Retargeting in Multi-Finger Imitation Learning},
   author = {Anonymous},
   note   = {Under review},
   year   = {2026}
 }</pre>
+    </div>
+  </div>
 </section>
 
-<footer>Anonymous project page for a paper under double-anonymous review.</footer>
+</main>
 
-</div>
+<footer>
+  <div class="wrap">
+    <div><b>PACT Hand</b> &middot; anonymous project page for double-anonymous review</div>
+    <div>Author names, affiliations and contact details will be added after the review period.</div>
+  </div>
+</footer>
+
+<script src="assets/js/site.js" defer></script>
 </body>
 </html>
